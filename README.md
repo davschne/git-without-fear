@@ -1,9 +1,6 @@
 # Git without Fear: demystifying reset, rebase, and other scary operations
 
-A Git history is a directed, acyclic graph.
-- Each commit is a node or vertex.
-- Each branch is a path through the graph.
-- It's a directed graph because nodes (commits) are ordered chronologically.
+
 
 ## Basic, safest approach: treating branches as append-only logs
 
@@ -17,32 +14,47 @@ We can make new logs from existing logs:
 
 Going back in time is safe as long as we don't alter any existing logs.
 
-Merges are a bit special. A merge combines two logs, preserving the precise chronology of commits, but it doesn't alter any commits. They retain their timestamps and unique identifiers (commit hashes).
+### Merge: safely combine two branches
+`git merge` combines two logs, but it doesn't alter any commits. They retain their timestamps and unique identifiers (commit hashes). Depending on how you're displaying your history, you may see commits from the two branches interspersed or sorted in some other way (confusing!).
+
+### Revert: safely undo an earlier commit
+`git revert` undoes an earlier commit (not necessarily the most recent) by making a new commit that reverses the changes in the target commit.
 
 ## More powerful but more dangerous: operations that rewrite history
 
 They're dangerous because they alter existing commits.
 
+Handy hint: For safety, copy the branch (`git branch`) before rewriting history.
+
 ### Reset:
-- `git reset` allows us to delete the end of a branch.
-- Handy hint: For safety, copy the branch (`git branch`) before resetting.
+
+`git reset` allows us to delete the end of a branch.
+
+Types of resets:
+- soft
+- mixed
+- hard
 
 ### Rebase:
+
 - `git rebase` is similar to `git merge` in that it combines two branches.
 - Unlike a merge, though, a rebase alters existing commits.
-- Rebase can be useful for keeping the graph tidy and orderly. After a merge, commits from the two branches that were merged may be interspersed, because Git always orders commits chronologically. This can make it more difficult for a reader of the history to understand what commits are logically related.
+- Rebase can be useful for keeping the graph tidy and orderly. Merging introduces special "merge" commits that can clutter up the history.
 - A rebase, on the other hand, rewrites ALL the commits of one branch, moving them forward in time so that they appear to have been written after all the commits of the other branch.
-- It alters the timestamps on the commits and gives them new hashes, but it doesn't change their content.
+- It alters the timestamps on the commits and gives them new hashes, but it doesn't change their content (unless using interactive rebase).
 - Handy hints:
 	- Be careful not to rebase on a shared branch (any branch multiple people are working on).
 	- As you probably know already, after a PR has been approved, it's good practice to merge the target branch into your PR branch, so that you can resolve merge conflicts, if any. But a tidier way of accomplishing the same goal is to REBASE your PR branch onto the target branch.
 	- If in doubt, a wise developer will talk about the rebase versus merge approach with his or her collaborators.
 
 ### Interactive Rebase:
-- Actually quite different from "rebase". It's unfortunate the nomenclature makes them sound related. A better name for this operation might have been "Edit."
-- An interactive rebase allows you to edit the commits of a single branch.
-- Git provides a menu of editing choices:
-	- Edit a commit message
-	- Squash with previous (combine two commits into one)
-	- Delete a commit
-	- Reorder commits by moving them forward or backward in time.
+
+Two different scenarios:
+1. Combine two branches, as with an ordinary rebase, but with the ability to edit commits as they're replayed.
+2. Edit the commits of a single branch.
+
+Git provides a menu of editing choices:
+- Edit a commit message
+- Squash with previous (combine two commits into one)
+- Delete a commit
+- Reorder commits by moving them forward or backward in time.
