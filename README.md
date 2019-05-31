@@ -12,11 +12,11 @@ We can make new branches from existing branches:
 
 Going back in time is safe as long as we don't alter any existing commits.
 
-### Merge: safely combine two branches
-`git merge` combines two branches, but it doesn't alter any commits. They retain their timestamps and unique identifiers (commit hashes).
-
 ### Revert: safely undo an earlier commit
 `git revert` undoes an earlier commit (not necessarily the most recent) by making a new commit that reverses the changes in the target commit.
+
+### Merge: safely combine two branches
+`git merge` combines two branches, but it doesn't alter any commits. They retain their timestamps and unique identifiers (commit hashes).
 
 ## More powerful but more dangerous: operations that rewrite history
 
